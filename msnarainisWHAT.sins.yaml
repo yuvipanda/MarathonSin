@@ -1,0 +1,15 @@
+name: msnarainishotbot
+delay: 1
+username: msnarainIsWHAT
+store-file: .msnarainIsWHAT.store
+behaviors:
+    - search-term: "#msnarainishot"
+      responses:
+        - "Yennadhu, @msnarain hot-a? Cookerla avinja moonju saar avandhu!"
+        - "Chappi potta mangotta thalayan saar @msnarain!"
+        - "@msnarain oru kan avinja kabodhi. Hot yellam illa!"
+        - "Avan oru morden dress potta nithyananda!"
+        - "Avana Nee! Andha munja poi hottunu solreya, vekkama illa?"
+        - "Yennadhu, @msnarain Silk smithavoda maru pirappa?!"
+        - "aamam ba, @msnarain dhaan Global Warmingku kaaranam!"
+
