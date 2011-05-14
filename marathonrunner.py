@@ -66,7 +66,7 @@ class Bot(object):
             for tweet in results:
                 tweet_text = "@%s %s" % (tweet.user.screen_name, random.choice(behavior['responses']))
                 try:
-                    api.PostUpdate(tweet_text)
+                    api.PostUpdate(tweet_text, in_reply_to_status_id=tweet.id)
                 except twitter.TwitterError:
                     continue
                 print tweet_text
