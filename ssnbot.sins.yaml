@@ -1,0 +1,7 @@
+name: ssnbot
+delay: 1
+username: ssnbot
+store-file: .ssnbot.store
+behaviors:
+    - search-term: "@ssnbot"
+      responses: "ssnbot.responses.txt"
