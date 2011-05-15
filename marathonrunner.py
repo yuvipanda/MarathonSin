@@ -40,7 +40,9 @@ class Bot(object):
         self.username = username
         self.delay = delay
         self.behaviors = []
-        
+        self.blocked_users = []
+        self.allowed_users = []
+
         self._api = None
         self._store = Store(['search'], store_filepath)
 
@@ -57,6 +59,12 @@ class Bot(object):
         self.consumer_secret = consumer_secret
         self.access_key = access_key
         self.access_secret = access_secret
+
+    def add_allowed_users(self, users):
+        self.allowed_users += users
+
+    def add_blocked_users(self, users):
+        self.blocked_users += users
 
     def loop_once(self, ignore):
         api = self._get_api()
@@ -87,6 +95,13 @@ class Bot(object):
                     access_token_key=self.access_key,
                     access_token_secret=self.access_secret)
         return self._api
+
+    def _filter_tweet(self, tweet):
+        actionable = False
+        if self.allowed_users:
+            actionable = tweet.user.screen_name in self.allowed_users
+        elif self.blocked_users:
+            actionable = tweet.user.screen_name not in self.blocked_users
 
     def _actionable_search_results(self):
         api = self._get_api()
