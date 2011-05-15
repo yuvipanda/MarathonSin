@@ -61,10 +61,10 @@ class Bot(object):
         self.access_secret = access_secret
 
     def add_allowed_users(self, users):
-        self.allowed_users += users
+        self.allowed_users += [u.lower() for u in users]
 
     def add_blocked_users(self, users):
-        self.blocked_users += users
+        self.blocked_users += [u.lower() for u in users]
 
     def loop_once(self, ignore):
         api = self._get_api()
@@ -97,11 +97,11 @@ class Bot(object):
         return self._api
 
     def _filter_tweet(self, tweet):
-        actionable = False
         if self.allowed_users:
-            actionable = tweet.user.screen_name in self.allowed_users
+            return tweet.user.screen_name.lower() in self.allowed_users
         elif self.blocked_users:
-            actionable = tweet.user.screen_name not in self.blocked_users
+            return tweet.user.screen_name.lower() not in self.blocked_users
+        return True
 
     def _actionable_search_results(self):
         api = self._get_api()
@@ -109,6 +109,7 @@ class Bot(object):
             if behavior['type'] == 'search':                
                 since_id = self._store.get('search', behavior['term'])
                 results = api.GetSearch(behavior['term'], per_page=50, since_id=since_id)
+                filtered_results = [t for t in results if self._filter_tweet(t)]
                 yield (behavior, results)
                 if len(results) > 0:
                     self._store.set('search', behavior['term'], results[0].id)
@@ -140,5 +141,9 @@ if __name__ == "__main__":
             creds['consumer-secret'],
             creds['access-key'],
             creds['access-secret'])
+    if 'allowed-users' in data:
+        bot.add_allowed_users(data['allowed-users'])
+    elif 'blocked-users' in data:
+        bot.add_blocked_users(data['blocked-users'])
 
     bot.loop(ignore)
