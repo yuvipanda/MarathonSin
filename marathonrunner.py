@@ -58,10 +58,13 @@ class Bot(object):
         self.access_key = access_key
         self.access_secret = access_secret
 
-    def loop_once(self):
+    def loop_once(self, ignore):
         api = self._get_api()
         print "starting loop"
         for behavior, results in self._actionable_search_results():
+            if ignore:
+                print "Ignoring %s tweets" % len(results)
+                continue
             print "%s results" % len(results)
             for tweet in results:
                 tweet_text = "@%s %s" % (tweet.user.screen_name, random.choice(behavior['responses']))
@@ -71,9 +74,9 @@ class Bot(object):
                     continue
                 print tweet_text
 
-    def loop(self):
+    def loop(self, ignore):
         while True:
-            self.loop_once()
+            self.loop_once(ignore)
             time.sleep(self.delay)
 
     def _get_api(self):
@@ -109,6 +112,7 @@ def resolve_filerefs(value):
 if __name__ == "__main__":
     data_file = sys.argv[1]
     creds_file = sys.argv[2]
+    ignore = "--ignore" in sys.argv
     data = yaml.load(open(data_file))
     creds = yaml.load(open(creds_file))
 
@@ -122,4 +126,4 @@ if __name__ == "__main__":
             creds['access-key'],
             creds['access-secret'])
 
-    bot.loop()
+    bot.loop(ignore)
