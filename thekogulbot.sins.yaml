@@ -1,0 +1,7 @@
+name: thekogulbot
+delay: 1
+username: thekogulbot
+store-file: .thekogulbot.store
+behaviors:
+    - search-term: "#kogul"
+      responses: "thekogulbot.responses.txt"
